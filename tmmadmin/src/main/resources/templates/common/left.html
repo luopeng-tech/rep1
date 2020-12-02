@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<aside th:fragment="left">
+    <div id="sidebar"  class="nav-collapse " >
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+
+            <p class="centered"><a th:href="@{/profile.html}"><img th:src="@{/assets/img/ui-sam.jpg}" class="img-circle" width="60"></a></p>
+            <h5 class="centered">
+                <span th:text="${session.admin_nickname}"></span>
+            </h5>
+
+            <li class="mt">
+                <a th:href="@{/index}">
+                    <i class="fa fa-dashboard"></i>
+                    <span>首页</span>
+                </a>
+            </li>
+
+            <li class="sub-menu" th:each="fmenu :${session.menuList}">
+                <a href="javascript:;" >
+                    <i class="fa fa-book"></i>
+                    <span th:text="${fmenu.menu_name}"></span>
+                </a>
+                <ul class="sub" >
+                    <li th:each="zmenu:${fmenu.ziMenuList}"><a  th:href="@{${zmenu.menu_url}}">
+                        <span th:text="${zmenu.menu_name}"></span>
+                    </a></li>
+
+                </ul>
+            </li>
+
+
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+</body>
+</html>

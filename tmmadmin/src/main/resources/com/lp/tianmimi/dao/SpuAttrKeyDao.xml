@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.SpuAttrKeyDao">
+<select id="getAttrKeyList" resultType="spuattrkey">
+    select * from spu_attr_key
+</select>
+<insert id="insertSpuAttrKey" parameterType="spuattrkey">
+    <selectKey order="AFTER" keyProperty="id" resultType="int">
+        SELECT LAST_INSERT_ID();
+    </selectKey>
+    insert  into spu_attr_key values (null,#{key_name},#{createtime},#{updatetime})
+</insert>
+    <insert id="insertCategory_SpuAttrKey">
+        insert  into spu_attr_key_categories values(#{spuattrkey_id},#{cate_id})
+    </insert>
+    <select id="getSpuAttrKeyById" resultType="spuattrkey">
+        select  * from spu_attr_key where id=#{id}
+    </select>
+    <select id="getAttrKeySByCateId" resultMap="getAttrKeySByCateIdMap">
+        SELECT a.* FROM spu_attr_key a INNER JOIN spu_attr_key_categories b ON
+         a.`id`=b.`spu_attr_key_id` WHERE b.`category_id` =#{cate_id}
+    </select>
+    <resultMap id="getAttrKeySByCateIdMap" type="spuattrkey">
+        <id column="id" property="id"></id>
+        <result column="key_name" property="key_name"></result>
+        <result column="createtime" property="createtime"></result>
+        <result column="updatetime" property="updatetime"></result>
+
+        <collection property="spuAttrValueList"
+                    column="id"
+                    ofType="SpuAttrValue"
+                    select="com.lp.tianmimi.dao.SpuAttrValueDao.getSpuAttrValuesByKeyId"
+                    fetchType="lazy"></collection>
+    </resultMap>
+</mapper>

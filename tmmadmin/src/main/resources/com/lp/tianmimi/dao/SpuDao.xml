@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.SpuDao">
+  <select id="getSpuList" resultMap="getSpuListMap">
+      select * from  spu
+  </select>
+    <resultMap id="getSpuListMap" type="spu">
+        <id column="id" property="id"></id>
+        <result column="spu_name" property="spu_name"></result>
+        <result column="spu_thumburl" property="spu_thumburl"></result>
+        <result column="spu_price" property="spu_price"></result>
+        <result column="spu_title" property="spu_title"></result>
+        <result column="spu_introduction" property="spu_introduction"></result>
+        <result column="spu_warningstock" property="spu_warningstock"></result>
+        <result column="spu_maxbuy" property="spu_maxbuy"></result>
+        <result column="spu_unit" property="spu_unit"></result>
+        <result column="spu_status" property="spu_status"></result>
+        <result column="spu_brand_id" property="spu_brand_id"></result>
+        <result column="spu_category_id" property="spu_category_id"></result>
+        <result column="spu_createtime" property="pu_createtime"></result>
+        <result column="spu_updatetime" property="spu_updatetime"></result>
+        <association property="brand"
+        column="spu_brand_id"
+        select="com.lp.tianmimi.dao.BrandDao.getBrandById"
+        fetchType="lazy">
+        </association>
+        <association property="category"
+                     column="spu_category_id"
+                     select="com.lp.tianmimi.dao.CategoryDao.getCategoryById"
+                     fetchType="lazy">
+        </association>
+    </resultMap>
+
+</mapper>

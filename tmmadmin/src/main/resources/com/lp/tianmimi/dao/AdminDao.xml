@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.AdminDao">
+    <select id="getAdminByName" resultMap="Admin">
+    select * from admin where admin_name=#{admin_name}
+</select>
+    <resultMap id="Admin" type="admin">
+        <id column="admin_id" property="admin_id"></id>
+        <result column="admin_name" property="admin_name"></result>
+        <result column="admin_pass" property="admin_pass"></result>
+        <result column="admin_nickname" property="admin_nickname"></result>
+        <collection property="roleList"
+                    ofType="role"
+                    column="admin_id"
+                    select="com.lp.tianmimi.dao.RoleDao.getRoleListByAdminId"
+                    fetchType="lazy">
+        </collection>
+        <collection property="menuList"
+                    ofType="menu"
+                    column="admin_id"
+                    select="com.lp.tianmimi.dao.MenuDao.getMenuList"
+                    fetchType="lazy">
+        </collection>
+    </resultMap>
+    <select id="getAllAdminList" resultType="admin">
+        select * from admin
+        <where>
+            admin_status=1
+            <if test="admin_name!=null and admin_name!=''">
+                and admin_name like '%${admin_name}%'
+            </if>
+            <if test="admin_name!=null and admin_nickname!=''">
+                and admin_nickname like '%${admin_nickname}%'
+            </if>
+        </where>
+    </select>
+    <insert id="insertAdmin" parameterType="adminvo">
+        <selectKey keyProperty="admin_id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        insert into admin (admin_name,admin_pass,admin_nickname) values (#{admin_name},#{admin_pass},#{admin_nickname})
+    </insert>
+    <insert id="insertAdminRole">
+        insert into admin_role (admin_id,role_id) values
+        <foreach collection="roleids" item="roleid" separator=",">
+            (#{admin_id},#{roleid})
+        </foreach>
+    </insert>
+    <update id="deleteAdmin">
+        update  admin set admin_status=0 where admin_id=#{admin_id}
+    </update>
+    <select id="getAdminById" resultMap="getAdminByIdMap">
+        select * from admin where admin_id=#{admin_id}
+    </select>
+    <resultMap id="getAdminByIdMap" type="adminvo">
+        <id column="admin_id" property="admin_id"></id>
+        <result column="admin_name" property="admin_name"></result>
+        <result column="admin_nickname" property="admin_nickname"></result>
+
+    </resultMap>
+    <select id="getRoleListByAdminId" resultMap="getRoleListByAdminIddMap">
+        SELECT * FROM role a LEFT JOIN
+        (SELECT c.*,d.`role_id` yrole_id FROM admin c
+        INNER JOIN admin_role d ON c.admin_id=d.admin_id
+        WHERE c.`admin_id`=#{admin_id})b
+        ON a.`role_id`=b.yrole_id
+    </select>
+    <resultMap id="getRoleListByAdminIddMap" type="rolevo">
+        <id column="role_id" property="role_id"></id>
+        <result column="role_name" property="role_name"></result>
+        <result column="yrole_id" property="yrole_id"></result>
+
+    </resultMap>
+    <update id="updateAdmin" parameterType="adminvo">
+        update admin set admin_name=#{admin_name},admin_nickname=#{admin_nickname}
+        where  admin_id=#{admin_id}
+    </update>
+    <delete id="deleteRolesByAdminId">
+        delete  from admin_role where admin_id=#{admin_id}
+    </delete>
+
+
+</mapper>

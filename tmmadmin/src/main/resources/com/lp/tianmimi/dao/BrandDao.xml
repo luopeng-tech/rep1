@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.BrandDao">
+<select id="getBrandList" resultMap="getBrandListMap">
+    select  * from brand
+</select>
+    <resultMap id="getBrandListMap" type="brand">
+        <id column="id" property="id"></id>
+        <result column="brand_name" property="brand_name"></result>
+        <result column="brand_introduction" property="brand_introduction"></result>
+        <result column="brand_logourl" property="brand_logourl"></result>
+        <result column="sortno" property="sortno"></result>
+        <result column="createtime" property="createtime"></result>
+        <result column="updatetime" property="updatetime"></result>
+
+        <collection property="categoryList"
+                    column="id"
+                    ofType="Category"
+                    select="com.lp.tianmimi.dao.CategoryDao.getCategoryListByBrandId"
+                    fetchType="lazy"></collection>
+    </resultMap>
+    <insert id="addBrand" parameterType="brand">
+        insert  into brand values (null,#{brand_name},#{brand_introduction},#{brand_logourl},#{sortno},#{createtime},#{updatetime})
+    </insert>
+    <select id="getBrandById" resultType="brand">
+        select * from brand where  id=#{spu_brand_id}
+    </select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.CategoryDao">
+<select id="getAllCategoryList" resultType="category">
+    select * from category
+</select>
+    <insert id="addCategory" parameterType="Category">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        insert into category(cate_name,createtime,updatetime)values (#{cate_name},#{createtime},#{updatetime})
+    </insert>
+    <insert id="addBrand_Category" >
+        insert into brand_categories values(#{brand_id},#{category_id})
+    </insert>
+    <select id="getCategoryById" resultType="category" >
+        select * from category where id=#{spu_category_id}
+    </select>
+    <select id="getCategoryListByBrandId" resultType="category">
+        SELECT a.* FROM category a INNER JOIN brand_categories b ON a.`id`=b.`category_id` WHERE b.`brand_id`=#{brand_id}
+    </select>
+</mapper>

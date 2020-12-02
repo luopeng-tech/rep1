@@ -1,0 +1,12 @@
+#连接数据库的信息
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///eshop
+    username: root
+    password: 1234
+    type: com.alibaba.druid.pool.DruidDataSource
+#包起别名
+mybatis:
+  type-aliases-package: com.lp.tianmimi.pojo
+

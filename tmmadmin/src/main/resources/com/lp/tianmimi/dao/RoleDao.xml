@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.RoleDao">
+    <select id="getRoleListByAdminId" resultMap="Role">
+         select a.*
+            from `role` a
+               inner join `admin_role` b on a.role_id = b.role_id
+                 where
+                   b.admin_id = #{ admin_id }
+    </select>
+    <resultMap id="Role" type="role">
+        <id property="role_id" column="role_id"/>
+        <result property="role_name" column="role_name"/>
+    </resultMap>
+    <select id="getRoleListByOperateUrl" resultMap="Role">
+      select e.*
+            from `operate` a
+        inner join `permission_operate` b on a.operate_id = b.operate_id
+        inner join `permission` c on b.permission_id = c.permission_id
+        inner join `role_permission` d on c.permission_id = d.permission_id
+        inner join `role` e on d.role_id = e.role_id
+        where a.operate_url = #{ operate_url }
+   </select>
+    <select id="getAllRoles" resultType="role">
+        select * from role
+    </select>
+    <select id="getAllRoleVoList" resultType="rolevo">
+        select * from role
+    </select>
+    <select id="getRoleById" resultMap="getRoleByIdMap">
+        select * from role where role_id=#{role_id}
+    </select>
+    <resultMap id="getRoleByIdMap" type="rolevo">
+        <id column="role_id" property="role_id"></id>
+        <result column="role_name" property="role_name"></result>
+        <collection property="permissionVoList"
+        column="role_id"
+        ofType="PermissionVo"
+        select="com.lp.tianmimi.dao.PermissionDao.getAllPermissionByRoleId"
+        fetchType="lazy">
+        </collection>
+    </resultMap>
+
+</mapper>

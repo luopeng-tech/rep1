@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lp.tianmimi.dao.PermissionDao">
+<select id="getAllPermissionByRoleId" resultType="PermissionVo">
+        SELECT c.permission_id ,c.permission_name,c.pid,d.permission_id ypermission_id
+        FROM permission c LEFT JOIN
+        (SELECT a.*,b.role_id FROM permission a
+        INNER JOIN role_permission b
+        ON a.permission_id=b.`permission_id`
+        WHERE b.`role_id`=#{role_id}) d
+        ON c.permission_id=d.permission_id
+</select>
+
+</mapper>
